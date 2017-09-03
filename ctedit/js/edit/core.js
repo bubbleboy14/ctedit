@@ -1,7 +1,7 @@
 edit.core = {
 	_modz: {},
 	editor: function(path, node_id) {
-		var mz = edit.core.modz,
+		var mz = edit.core._modz,
 			pobj = mz[path] = mz[path] || {},
 			data = pobj[node_id] = pobj[node_id] || {
 				path: path,
@@ -32,8 +32,8 @@ edit.core = {
 		CT.db.get("pageedit", function(mods) {
 			var modz = edit.core._modz;
 			mods.forEach(function(mod) {
-				var p = modz[mod.path] = modz[mod.path] || {},
-					p[mod.node_id] = mod;
+				modz[mod.path] = modz[mod.path] || {},
+				modz[mod.path][mod.node_id] = mod;
 			});
 			var pathz = core.config.ctedit.paths,
 				content = CT.dom.div(null, "abs t0 b0 l0 r200"),
@@ -49,10 +49,9 @@ edit.core = {
 		});
 	},
 	swap: function(mod) {
-		if (mod.content) {
-			var node = CT.dom.id(mod.id);
+		var node = CT.dom.id(mod.id);
+		if (node && mod.content)
 			node[node.tagName == "IMG" ? "src" : "innerHTML"] = mod.content;
-		}
 	},
 	get: function(cb, path) {
 		CT.db.get("pageedit", cb, null, null, null, {
