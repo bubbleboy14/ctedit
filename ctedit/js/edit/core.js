@@ -56,7 +56,7 @@ edit.core = {
 	},
 	swap: function(modz) {
 		modz.forEach(function(mod) {
-			var node = CT.dom.id(mod.node_id);
+			var node = CT.dom.id(mod.node_id, true);
 			if (node && mod.content)
 				node[node.tagName == "IMG" ? "src" : "innerHTML"] = mod.content;
 		});
