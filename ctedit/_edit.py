@@ -7,7 +7,7 @@ def response():
 		entity = db.get(data["key"])
 	else:
 		entity = PageEdit(**data)
-	entity.content = data.content
+	entity.content = data["content"]
 	entity.put()
 	succeed(entity.key.urlsafe())
 

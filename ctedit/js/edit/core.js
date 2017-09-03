@@ -13,6 +13,7 @@ edit.core = {
 			content,
 			CT.dom.button("update", function() {
 				if (content.value != data.content) {
+					data.content = content.value;
 					CT.net.post({
 						path: "/_edit",
 						params: {
@@ -20,7 +21,6 @@ edit.core = {
 						},
 						cb: function(key) {
 							data.key = key; // for new ones
-							data.content = content.value;
 							alert("we did it!");
 						}
 					})
@@ -54,10 +54,12 @@ edit.core = {
 			]);
 		});
 	},
-	swap: function(mod) {
-		var node = CT.dom.id(mod.id);
-		if (node && mod.content)
-			node[node.tagName == "IMG" ? "src" : "innerHTML"] = mod.content;
+	swap: function(modz) {
+		modz.forEach(function(mod) {
+			var node = CT.dom.id(mod.node_id);
+			if (node && mod.content)
+				node[node.tagName == "IMG" ? "src" : "innerHTML"] = mod.content;
+		});
 	},
 	get: function(cb, path) {
 		CT.db.get("pageedit", cb, null, null, null, {
