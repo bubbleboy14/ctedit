@@ -17,6 +17,7 @@ edit.core = {
 					CT.net.post({
 						path: "/_edit",
 						params: {
+							action: "edit",
 							data: data
 						},
 						cb: function(key) {
@@ -73,3 +74,98 @@ edit.core = {
 			edit.core.get(edit.core.swap, p);
 	}
 };
+
+edit.core.style = {
+	color: function(key, val) {
+		var id = key.replace(/ /g, ""),
+			n = CT.dom.field(id, val, "block", null, null, {
+				color: "gray",
+				background: val
+			});
+		setTimeout(function() { // wait a tick
+			jsColorPicker("input#" + id, {
+				color: val,
+				readOnly: true
+			});
+		}, 500);
+		return n;
+	},
+	editor: function(skin) {
+		var rules = CT.dom.textArea(null, skin.rules, "w400p h200p"),
+			font = CT.dom.select([
+				"sans-serif, Arial, Helvetica",
+				"serif, Times New Roman, Times",
+				"monospace, Courier, Courier New"
+			], null, null, skin.font),
+			color = edit.core.style.color("Text Color", skin.color),
+			background = edit.core.style.color("Background Color", skin.background),
+			submitter = CT.dom.button("Update", function() {
+				CT.net.post({
+					path: "/_edit",
+					params: {
+						action: "style",
+						data: {
+							font: font.value,
+							rules: rules.value,
+							color: color.value,
+							background: background.value
+						}
+					},
+					cb: edit.core.style.apply
+				});
+			});
+		CT.dom.setContent("ctmain", CT.dom.div([
+			CT.dom.div("Style Your Site!", "biggerest bold centered"),
+			CT.dom.div([
+				CT.dom.div([
+					"CSS", rules
+				], "right"),
+				[
+					CT.dom.label("Text Color", "TextColor"),
+					color
+				], [
+					CT.dom.label("Background Color", "BackgroundColor"),
+					background
+				], [
+					"Font", font
+				],
+				submitter
+			])
+		], "bordered padded margined round hmin400p"));
+	},
+	apply: function(skin) {
+		skin.font && CT.dom.addStyle(null, null, {
+			body: {
+				"font-family": skin.font
+			}
+		});
+		skin.color && CT.dom.addStyle(null, null, {
+			body: {
+				color: skin.color
+			}
+		});
+		skin.background && CT.dom.addStyle(null, null, {
+			body: {
+				background: skin.background
+			}
+		});
+		skin.rules && CT.dom.addStyle(skin.rules);
+	},
+	load: function(cb) {
+		if (edit.core.style._skin)
+			return cb(edit.core.style._skin);
+		CT.net.post({
+			path: "/_edit",
+			params: {
+				action: "style"
+			},
+			cb: function(skin) {
+				edit.core.style._skin = skin;
+				cb(skin);
+			}
+		});
+	}
+};
+
+if (core.config.ctedit.autoStyle)
+	edit.core.style.load(edit.core.style.apply);
