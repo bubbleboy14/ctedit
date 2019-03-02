@@ -10,7 +10,7 @@ This package provides a simple interface (and corresponding models) for generica
     	"html": ["edit"]
     }
     model = {
-    	"ctedit.model": ["PageEdit"]
+    	"ctedit.model": ["PageEdit", "Style"]
     }
     routes = {
     	"/_edit": "_edit.py"
@@ -21,6 +21,7 @@ This package provides a simple interface (and corresponding models) for generica
 ## core.config.ctedit
 ### Import line: 'CT.require("core.config");'
     {
+    	"autoStyle": false,
     	"paths": {
     		"/": ["ctmain"]
     	}
