@@ -1,4 +1,5 @@
 {
+	"autoStyle": false,
 	"paths": {
 		"/": ["ctmain"]
 	}
