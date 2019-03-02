@@ -4,7 +4,7 @@ syms = {
 	"html": ["edit"]
 }
 model = {
-	"ctedit.model": ["PageEdit"]
+	"ctedit.model": ["PageEdit", "Style"]
 }
 routes = {
 	"/_edit": "_edit.py"
