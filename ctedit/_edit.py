@@ -10,7 +10,7 @@ def response():
 			style = Style()
 			style.put() # for key
 		if data:
-			for key, val in data.items():
+			for key, val in list(data.items()):
 				setattr(style, key, val)
 			style.put()
 		succeed(style.data())
