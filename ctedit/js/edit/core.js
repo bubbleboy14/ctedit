@@ -7,13 +7,19 @@ edit.core = {
 				path: path,
 				content: "",
 				node_id: node_id
-			}, content = CT.dom.textArea(null, data.content, "w1");
+			}, content = CT.dom.smartField({
+				wyz: true,
+				isTA: true,
+				value: data.content,
+				classname: "w1 mt5 hmin200p"
+			});
 		return [
 			CT.dom.div(data.node_id, "bigger"),
 			content,
 			CT.dom.button("update", function() {
-				if (content.value != data.content) {
-					data.content = content.value;
+				var cval = content.fieldValue();
+				if (cval != data.content) {
+					data.content = cval;
 					CT.net.post({
 						path: "/_edit",
 						params: {
