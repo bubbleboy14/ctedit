@@ -65,8 +65,8 @@ edit.core = {
 		modz.forEach(function(mod) {
 			var node = CT.dom.id(mod.node_id, true);
 			if (node && mod.content) {
-				var cont = mod.content.replace(/\r\n/g,
-					"<br>").replace(/\r/g, "<br>").replace(/\n/g, "<br>");
+				var cont = mod.content;//.replace(/\r\n/g,
+//					"<br>").replace(/\r/g, "<br>").replace(/\n/g, "<br>");
 				if (node.tagName == "IMG")
 					node.src = cont;
 				else if (core.config.autoparse)
