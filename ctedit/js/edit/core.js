@@ -64,9 +64,16 @@ edit.core = {
 	swap: function(modz) {
 		modz.forEach(function(mod) {
 			var node = CT.dom.id(mod.node_id, true);
-			if (node && mod.content)
-				node[node.tagName == "IMG" ? "src" : "innerHTML"] = mod.content.replace(/\r\n/g,
+			if (node && mod.content) {
+				var cont = mod.content.replace(/\r\n/g,
 					"<br>").replace(/\r/g, "<br>").replace(/\n/g, "<br>");
+				if (node.tagName == "IMG")
+					node.src = cont;
+				else if (core.config.autoparse)
+					CT.dom.setContent(node, CT.dom.div(cont));
+				else
+					node.innerHTML = cont;
+			}
 		});
 	},
 	get: function(cb, path) {
