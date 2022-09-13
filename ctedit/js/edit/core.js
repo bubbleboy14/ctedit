@@ -42,14 +42,15 @@ edit.core = {
 				modz[mod.path] = modz[mod.path] || {},
 				modz[mod.path][mod.node_id] = mod;
 			});
-			var pathz = core.config.ctedit.paths,
+			var pathz = core.config.ctedit.paths, idz,
 				content = CT.dom.div("click a path (on the right) to begin"),
 				sidebar = CT.dom.div();
 			CT.dom.setContent("ctmain", [
 				CT.dom.div([
 					CT.dom.div("Paths", "bigger pb10"),
 					CT.panel.triggerList(Object.keys(pathz), function(path) {
-						CT.dom.setContent(content, pathz[path].map(function(node_id) {
+						idz = Array.isArray(pathz[path]) ? pathz[path] : pathz[path].ids;
+						CT.dom.setContent(content, idz.map(function(node_id) {
 							return edit.core.editor(path, node_id);
 						}));
 					}, sidebar)
@@ -62,10 +63,14 @@ edit.core = {
 		});
 	},
 	swap: function(modz) {
+		var pdata = core.config.ctedit.paths[location.pathname];
 		modz.forEach(function(mod) {
 			var node = CT.dom.id(mod.node_id, true);
 			if (node && mod.content) {
 				var cont = mod.content;//.replace(/\r\n/g,
+
+				if (pdata.preproc)
+					cont = pdata.preproc(cont);
 //					"<br>").replace(/\r/g, "<br>").replace(/\n/g, "<br>");
 				if (node.tagName == "IMG")
 					node.src = cont;
@@ -75,6 +80,7 @@ edit.core = {
 					node.innerHTML = cont;
 			}
 		});
+		pdata.postproc && pdata.postproc();
 	},
 	get: function(cb, path) {
 		CT.db.get("pageedit", cb, null, null, null, {
